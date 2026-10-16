@@ -18,11 +18,6 @@ PORT = 8000
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
-
-# ============================================================
-# DATABASE CONNECTION
-# ============================================================
-
 def get_connection():
     """Open a connection to Oracle Database."""
     if DB_USER == "YOUR_ORACLE_USERNAME" or DB_PASSWORD == "YOUR_ORACLE_PASSWORD":
@@ -37,13 +32,7 @@ def get_connection():
         dsn=DB_DSN,
     )
 
-
-# ============================================================
 # PASSWORD HASHING
-# PBKDF2 with a unique random salt for each password.
-# Existing SHA-256 hashes from an earlier version will not
-# match this format; users may need to register again.
-# ============================================================
 
 def hash_password(password):
     salt = secrets.token_bytes(16)
@@ -78,11 +67,8 @@ def verify_password(password, stored_hash):
         # Compatibility with the earlier unsalted SHA-256 version.
         legacy_digest = hashlib.sha256(password.encode("utf-8")).hexdigest()
         return hmac.compare_digest(legacy_digest, stored_hash)
-
-
-# ============================================================
+    
 # DATABASE HELPERS
-# ============================================================
 
 def execute_insert(sql, values):
     """Run an INSERT and always close the cursor and connection."""
